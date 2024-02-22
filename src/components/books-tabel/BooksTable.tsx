@@ -4,6 +4,7 @@ import { columns } from "./columns"
 
 const BooksTable = () => {
   let { books } = useBooks()
+  console.log(books.length)
   return (
     <>
       {books?.length ? (

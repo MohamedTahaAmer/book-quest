@@ -2,14 +2,14 @@
 
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 
+import { useBooks } from "@/lib/custom-hooks/use-books-data"
 import { useDebounce } from "@/lib/custom-hooks/use-debounce"
+import { useLimit } from "@/lib/custom-hooks/use-limit"
 import { FormatedBook } from "@/lib/types"
 import { Loader2, Search } from "lucide-react"
 import { Input } from "./ui/input"
-import { useBooks } from "@/lib/custom-hooks/use-books-data"
-import { useLimit } from "@/lib/custom-hooks/use-limit"
 
 const SearchBox = () => {
   const [input, setInput] = useState<string>("Books")
@@ -17,15 +17,12 @@ const SearchBox = () => {
   let { setBooks } = useBooks()
   let { limit } = useLimit()
 
-  useEffect(() => {
-    if (debouncedInput?.length) refetch()
-  }, [debouncedInput, limit])
-
-  const { isFetching, refetch } = useQuery({
+  const { isFetching } = useQuery({
     queryFn: async () => {
       if (!input.length) return []
+      console.log(limit)
       const { data } = await axios.get(
-        `https://openlibrary.org/search.json?&limit=${limit}&q=${input.replaceAll(
+        `https://openlibrary.org/search.json?&limit=${limit}&q=${debouncedInput.replaceAll(
           " ",
           "+",
         )}`,
@@ -44,8 +41,8 @@ const SearchBox = () => {
       setBooks(formatedBooks)
       return formatedBooks
     },
-    queryKey: ["search-books"],
-    enabled: false,
+    queryKey: ["search-books", limit, debouncedInput],
+    // enabled: false,
   })
 
   return (
