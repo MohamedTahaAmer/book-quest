@@ -9,24 +9,23 @@ import { FormatedBook } from "@/lib/types"
 import { Loader2, Search } from "lucide-react"
 import { Input } from "./ui/input"
 import { useBooks } from "@/lib/custom-hooks/use-books-data"
-import { useSort } from "@/lib/custom-hooks/use-sort"
+import { useLimit } from "@/lib/custom-hooks/use-limit"
 
 const SearchBox = () => {
   const [input, setInput] = useState<string>("Books")
   let debouncedInput = useDebounce(input, 700)
   let { setBooks } = useBooks()
-  let { sort } = useSort()
+  let { limit } = useLimit()
 
   useEffect(() => {
     if (debouncedInput?.length) refetch()
-  }, [debouncedInput, sort])
+  }, [debouncedInput, limit])
 
   const { isFetching, refetch } = useQuery({
     queryFn: async () => {
-      let limit = 25
       if (!input.length) return []
       const { data } = await axios.get(
-        `https://openlibrary.org/search.json?sort=${sort}&limit=${limit}&q=${input.replaceAll(
+        `https://openlibrary.org/search.json?&limit=${limit}&q=${input.replaceAll(
           " ",
           "+",
         )}`,

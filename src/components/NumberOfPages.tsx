@@ -1,3 +1,4 @@
+import { useLimit } from "@/lib/custom-hooks/use-limit"
 import {
   Select,
   SelectContent,
@@ -11,15 +12,23 @@ const NumberOfPages = ({
 }: {
   onValueChange: (_e: string) => void
 }) => {
+  let { setLimit } = useLimit()
   return (
     <>
-      <Select onValueChange={onValueChange} defaultValue="10">
+      <Select
+        onValueChange={(value: string) => {
+          let limit = +value * 2.5
+          setLimit(limit)
+          onValueChange(value)
+        }}
+        defaultValue="10"
+      >
         <SelectTrigger className="ml-4 w-[180px]">
           <SelectValue placeholder="Show 10" />
         </SelectTrigger>
         <SelectContent>
-          {[1, 2, 10, 20, 30, 40, 50].map((pageSize) => (
-            <SelectItem key={pageSize} value={"" + pageSize}>
+          {[10, 20, 30, 40, 50].map((pageSize) => (
+            <SelectItem key={pageSize} value={`${pageSize}`}>
               Show {pageSize}
             </SelectItem>
           ))}

@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button"
-import { useSort } from "@/lib/custom-hooks/use-sort"
 import { type FormatedBook } from "@/lib/types"
 import { ColumnDef } from "@tanstack/react-table"
 import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react"
@@ -8,20 +7,16 @@ import { useState } from "react"
 
 const RatingHeader = ({ column }: { column: any }) => {
   const [buttonClicks, setButtonClicks] = useState(0)
-  let { setSort } = useSort()
   const handleButtonClick = () => {
     if (buttonClicks === 0) {
       column.toggleSorting(true)
       setButtonClicks(1)
-      setSort("new")
     } else if (buttonClicks === 1) {
       column.toggleSorting(false)
       setButtonClicks(2)
-      setSort("old")
     } else if (buttonClicks === 2) {
       column.clearSorting()
       setButtonClicks(0)
-      setSort("")
     }
   }
   return (
